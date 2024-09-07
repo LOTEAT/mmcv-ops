@@ -24,6 +24,12 @@ void roi_align_backward_cpu(Tensor grad_output, Tensor rois,
                                  int aligned_width, float spatial_scale,
                                  int sampling_ratio, int pool_mode,
                                  bool aligned);
+void bbox_overlaps_cpu(const Tensor bboxes1, const Tensor bboxes2, Tensor ious,
+                   const int mode, const bool aligned, const int offset);
+
+void bbox_overlaps_cuda(const Tensor bboxes1, const Tensor bboxes2, Tensor ious,
+                   const int mode, const bool aligned, const int offset);
+
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("roi_align_forward_cuda", &roi_align_forward_cuda, "roi align forward cuda kernel",
@@ -45,5 +51,11 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
         py::arg("grad_output"), py::arg("rois"), py::arg("argmax_y"),
         py::arg("argmax_x"), py::arg("grad_input"), py::arg("aligned_height"),
         py::arg("aligned_width"), py::arg("spatial_scale"),
-        py::arg("sampling_ratio"), py::arg("pool_mode"), py::arg("aligned"));
+        py::arg("sampling_ratio"), py::arg("pool_mode"), py::arg("aligned"));  
+  m.def("bbox_overlaps_cpu", &bbox_overlaps_cpu, "bbox overlaps cpu kernel", py::arg("bboxes1"),
+        py::arg("bboxes2"), py::arg("ious"), py::arg("mode"),
+        py::arg("aligned"), py::arg("offset"));
+  m.def("bbox_overlaps_cuda", &bbox_overlaps_cuda, "bbox overlaps cuda kernel", py::arg("bboxes1"),
+        py::arg("bboxes2"), py::arg("ious"), py::arg("mode"),
+        py::arg("aligned"), py::arg("offset"));
 }
