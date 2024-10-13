@@ -26,3 +26,4 @@ pip install -e .
 ### Main Content
 - [x] <a href='mmcv_ops/roi_align/roi_align.ipynb'>ROIAlign</a>
 - [x] <a href='mmcv_ops/bbox_overlaps/bbox_overlaps.ipynb'>BBoxOverlaps</a>
+- [x] <a href='mmcv_ops/knn/knn.ipynb'>KNN</a>
