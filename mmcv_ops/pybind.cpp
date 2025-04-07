@@ -35,6 +35,15 @@ void knn_forward_cuda(Tensor xyz, Tensor new_xyz, Tensor idx, Tensor dist2, int 
 void knn_forward_cpu(Tensor xyz, Tensor new_xyz, Tensor idx, Tensor dist2, int b, 
                       int n, int m, int nsample);
 
+Tensor nms_forward_cpu(Tensor boxes, Tensor scores, float iou_threshold, int offset);
+Tensor nms_forward_cuda(Tensor boxes, Tensor scores, float iou_threshold, int offset);
+
+Tensor softnms_forward_cpu(Tensor boxes, Tensor scores, Tensor dets, float iou_threshold,
+               float sigma, float min_score, int method, int offset);
+
+std::vector<std::vector<int>> nms_match_forward_cpu(Tensor dets, float iou_threshold);
+
+
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
 {
       m.def("roi_align_forward_cuda", &roi_align_forward_cuda, "roi align forward cuda kernel",
@@ -71,4 +80,14 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
             py::arg("new_xyz"), py::arg("idx"),
             py::arg("dist2"), py::arg("b"), py::arg("n"), py::arg("m"),
             py::arg("nsample"));
+      m.def("nms_forward_cpu", &nms_forward_cpu, "nms forward cpu ", py::arg("boxes"), py::arg("scores"),
+            py::arg("iou_threshold"), py::arg("offset"));
+      m.def("nms_forward_cuda", &nms_forward_cuda, "nms forward cuda ", py::arg("boxes"), py::arg("scores"),
+            py::arg("iou_threshold"), py::arg("offset"));
+      m.def("softnms_forward_cpu", &softnms_forward_cpu, "softnms forward cpu ", py::arg("boxes"),
+            py::arg("scores"), py::arg("dets"), py::arg("iou_threshold"),
+            py::arg("sigma"), py::arg("min_score"), py::arg("method"),
+            py::arg("offset"));
+      m.def("nms_match_forward_cpu", &nms_match_forward_cpu, "nms match forward cpu ", py::arg("dets"),
+            py::arg("iou_threshold"));
 }
